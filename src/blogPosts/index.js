@@ -1,17 +1,29 @@
 import { Router } from "express";
 
 import Model from "../utils/db/index.js";
-import authorModel from "../authors/model.js"
-import categoryModel from "../category/model.js"
+
 const blogs = Model.Blogs
+const comments = Model.Comments
 const blogsRouter = Router()
 
 
 
 blogsRouter.get("/", async (req, res, next) => {
     try {
+        const dbRes = await blogs.findAll()
+        res.send(dbRes)
+    } catch (error) {
+        res.status(500).send({ error: error.message })
+    }
+})
+blogsRouter.get("/all", async (req, res, next) => {
+    try {
         const dbRes = await blogs.findAll({
-            include: [{ model: authorModel }, { model: categoryModel }]
+            include: [Model.Authors, Model.Comments, Model.Categories]
+            //  here i populate the comments 
+            // and the Authors
+            // this is why its an array , otherwise i would just type
+            // include Model.Authors
 
         })
         res.send(dbRes)
@@ -29,16 +41,27 @@ blogsRouter.get("/:id", async (req, res, next) => {
     }
 })
 
-// blogsRouter.get("/:id/withComments")
+blogsRouter.get("/:id/comments", async (req, res, next) => {
+    try {
+        const data = await comments.findAll({
+            where: {
+                blogId: req.params.id
+            }
+        });
+        res.status(200).send(data);
+    } catch (error) {
+        res.status(500).send({ error: error.message })
+    }
+})
 
 blogsRouter.put("/:id", async (req, res, next) => {
     try {
         await blogs.update(req.body, {
             where: {
-                author_id: req.params.id
+                id: req.params.id
             }
         });
-        res.status(200).send(`Author with id : ${req.params.id} is successfully updated!`);
+        res.status(200).send(`Blog with id : ${req.params.id} is successfully updated!`);
     } catch (error) {
         res.status(500).send({ error: error.message })
     }
@@ -57,7 +80,7 @@ blogsRouter.delete("/:id", async (req, res, next) => {
     try {
         await blogs.destroy({
             where: {
-                author_id: req.params.id
+                id: req.params.id
             }
         });
         res.status(204).send()
