@@ -1,9 +1,9 @@
 export default (sequelize, DataTypes) => {
-    const Author = sequelize.define("author", {
-        author_id: {
+    const Author = sequelize.define("author", { //it takes the "author" name
+        id: { // and it creates the table by tranforming it to plural -> "authors" here 
             type: DataTypes.INTEGER,
             primaryKey: true,
-            autoIncrement: true,
+            autoIncrement: true, // gives the id the pervious id+1
         },
         name: {
             type: DataTypes.STRING,
@@ -19,11 +19,6 @@ export default (sequelize, DataTypes) => {
         }
 
 
-    },
-        {
-            timestamps: true,
-            createdAt: "created_at",
-            updatedAt: false
-        })
+    })
     return Author
 }

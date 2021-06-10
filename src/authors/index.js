@@ -24,11 +24,12 @@ authorsRouter.get("/:id", async (req, res, next) => {
     }
 })
 
+
 authorsRouter.put("/:id", async (req, res, next) => {
     try {
         await authors.update(req.body, {
             where: {
-                author_id: req.params.id
+                id: req.params.id
             }
         });
         res.status(200).send(`Author with id : ${req.params.id} is successfully updated!`);

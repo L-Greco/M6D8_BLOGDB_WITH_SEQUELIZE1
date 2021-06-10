@@ -7,10 +7,6 @@ export default (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true,
         },
-        category: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
         title: {
             type: DataTypes.STRING,
             allowNull: false
@@ -28,9 +24,10 @@ export default (sequelize, DataTypes) => {
             allowNull: false
         },
         content: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: false
-        },
+        }
+
 
     })
     return Blog
