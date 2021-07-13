@@ -19,13 +19,18 @@ blogsRouter.get("/", async (req, res, next) => {
 blogsRouter.get("/all", async (req, res, next) => {
     try {
         const dbRes = await blogs.findAll({
-            include: [Model.Authors, Model.Comments, Model.Categories]
+            attributes: { exclude: ["createdAt", "updatedAt", "authorId", "categoryId"] },
+            // here in attributes we exclude theese values        
+            include: [{ model: Model.Authors, attributes: { exclude: ["createdAt", "updatedAt"] } }, Model.Comments, Model.Categories],
             //  here i populate the comments 
             // and the Authors
             // this is why its an array , otherwise i would just type
             // include Model.Authors
 
-        })
+        }
+
+
+        )
         res.send(dbRes)
     } catch (error) {
         res.status(500).send({ error: error.message })
@@ -46,7 +51,8 @@ blogsRouter.get("/:id/comments", async (req, res, next) => {
         const data = await comments.findAll({
             where: {
                 blogId: req.params.id
-            }
+            },
+            include: Model.Authors
         });
         res.status(200).send(data);
     } catch (error) {

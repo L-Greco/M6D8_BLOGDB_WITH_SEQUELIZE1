@@ -37,7 +37,7 @@ models.Blogs.belongsTo(models.Categories);
 
 // comments with authors is one ( Author) to many (Comments)
 
-models.Authors.hasMany(models.Comments);   //many
+models.Authors.hasMany(models.Comments);   //an author can have many Comments
 models.Comments.belongsTo(models.Authors); //a comment has one Author
 
 // comments with blogs
